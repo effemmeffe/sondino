@@ -1,0 +1,15 @@
+#ifndef LWSHELL_OPTS_HDR_H
+#define LWSHELL_OPTS_HDR_H
+
+#define LWSHELL_CFG_USE_DYNAMIC_COMMANDS 0
+#define LWSHELL_CFG_USE_STATIC_COMMANDS 1
+#define LWSHELL_CFG_MAX_INPUT_LEN 128
+#define LWSHELL_CFG_MAX_CMD_ARGS 8
+#define LWSHELL_CFG_USE_OUTPUT 1
+#define LWSHELL_CFG_USE_LIST_CMD 1
+
+// 0: use terminal local echo only (recommended for VCP/CoolTerm)
+#define LWSHELL_CFG_INPUT_ECHO 0
+#define LWSHELL_CFG_USE_PROMPT 0
+
+#endif

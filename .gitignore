@@ -1,0 +1,13 @@
+build/
+/Debug/
+/Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+.cache/
+.metadata/
+compile_commands.json
+.vscode/
