@@ -36,7 +36,7 @@ static int32_t cmd_help(int32_t argc, char** argv)
     debug_shell_print("  listcmd  - list registered commands (LwSHELL)\r\n");
     debug_shell_print("  ver      - firmware version\r\n");
     debug_shell_print("  sys      - ThreadX / memory system dump\r\n");
-    debug_shell_print("  log      - log levels (log / log info on / log all off)\r\n");
+    debug_shell_print("  log      - levels / verbose (log / log info on / log verbose off)\r\n");
     debug_shell_print("  reset    - MCU reset\r\n");
     debug_shell_print("Enable local echo in your terminal.\r\n");
     return 0;
@@ -79,12 +79,13 @@ static int32_t cmd_log(int32_t argc, char** argv)
                      (mask & DEBUG_LOG_LEVEL_INFO) ? "on" : "off",
                      (mask & DEBUG_LOG_LEVEL_WARN) ? "on" : "off",
                      (mask & DEBUG_LOG_LEVEL_ERROR) ? "on" : "off");
+        shell_printf("verbose: %s\r\n", debug_log_verbose_get() ? "on" : "off");
         return 0;
     }
 
     if (argc != 3)
     {
-        debug_shell_print("usage: log [dbg|info|warn|error|all] [on|off]\r\n");
+        debug_shell_print("usage: log [dbg|info|warn|error|all|verbose] [on|off]\r\n");
         return -1;
     }
 
@@ -100,13 +101,20 @@ static int32_t cmd_log(int32_t argc, char** argv)
         }
         else
         {
-            debug_shell_print("usage: log <level> on|off\r\n");
+            debug_shell_print("usage: log <level|verbose> on|off\r\n");
             return -1;
+        }
+
+        if ((argv[1][0] == 'v') || (argv[1][0] == 'V'))
+        {
+            debug_log_verbose_set(enable);
+            shell_printf("verbose: %s\r\n", enable ? "on" : "off");
+            return 0;
         }
 
         if (debug_log_level_set_by_name(argv[1], enable) != 0)
         {
-            debug_shell_print("unknown level (dbg info warn error all)\r\n");
+            debug_shell_print("unknown level (dbg info warn error all verbose)\r\n");
             return -1;
         }
     }

@@ -33,6 +33,10 @@ uint8_t debug_log_level_get_mask(void);
 void debug_log_level_set_mask(uint8_t mask);
 int debug_log_level_set_by_name(const char* name, int enable);
 
+// Extra detail in app logs (enum names, …). Default on.
+void debug_log_verbose_set(int enable);
+int debug_log_verbose_get(void);
+
 #define LOGI(fmt, ...)                                         \
     do                                                         \
     {                                                          \
@@ -74,6 +78,14 @@ static inline int debug_log_vprintf(const char* fmt, va_list ap)
 }
 static inline void debug_log_flush(void)
 {
+}
+static inline void debug_log_verbose_set(int enable)
+{
+    (void) enable;
+}
+static inline int debug_log_verbose_get(void)
+{
+    return 0;
 }
 
 #define LOGI(fmt, ...) ((void) 0)

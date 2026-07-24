@@ -23,6 +23,7 @@ static ULONG log_queue_storage[LOG_QUEUE_DEPTH * LOG_MSG_ULONGS];
 static UCHAR log_thread_stack[LOG_THREAD_STACK_SIZE];
 static volatile UINT log_dropped_count;
 static volatile uint8_t log_level_mask = DEBUG_LOG_LEVEL_ALL;
+static volatile uint8_t log_verbose = 1U;
 
 static void log_uart_puts_crlf(const char* s)
 {
@@ -192,6 +193,16 @@ int debug_log_level_set_by_name(const char* name, int enable)
         log_level_mask &= (uint8_t) ~bit;
     }
     return 0;
+}
+
+void debug_log_verbose_set(int enable)
+{
+    log_verbose = (enable != 0) ? 1U : 0U;
+}
+
+int debug_log_verbose_get(void)
+{
+    return (log_verbose != 0U) ? 1 : 0;
 }
 
 void debug_log_flush(void)
