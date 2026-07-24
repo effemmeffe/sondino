@@ -199,7 +199,8 @@ prv_parse_input(lwshell_t* lwobj) {
                 }
 #if LWSHELL_CFG_USE_LIST_CMD
             } else if (strncmp(lwobj->argv[0], "listcmd", 7) == 0) {
-                LWSHELL_OUTPUT(lwobj, "List of registered commands\r\n");
+                // sondino: leading CRLF so list is readable with local-echo terminals
+                LWSHELL_OUTPUT(lwobj, "\r\nList of registered commands\r\n");
 #if LWSHELL_CFG_USE_DYNAMIC_COMMANDS
                 for (size_t i = 0; i < lwobj->dynamic_cmds_cnt; ++i) {
                     LWSHELL_OUTPUT(lwobj, lwobj->dynamic_cmds[i].name);
@@ -218,7 +219,10 @@ prv_parse_input(lwshell_t* lwobj) {
 #endif /* LWSHELL_CFG_USE_STATIC_COMMANDS */
 #endif /* LWSHELL_CFG_USE_LIST_CMD */
             } else {
-                LWSHELL_OUTPUT(lwobj, "Unknown command\r\n");
+                // sondino: clearer unknown-cmd feedback (vendored LwSHELL delta)
+                LWSHELL_OUTPUT(lwobj, "\r\nunknown: '");
+                LWSHELL_OUTPUT(lwobj, lwobj->argv[0]);
+                LWSHELL_OUTPUT(lwobj, "'. Type 'help'\r\n");
             }
         }
     }
