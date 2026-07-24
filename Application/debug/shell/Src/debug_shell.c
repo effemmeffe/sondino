@@ -26,6 +26,11 @@ void debug_shell_print(const char* str)
     }
 }
 
+void debug_shell_print_ready(void)
+{
+    debug_shell_print("\r\n[shell] ready. Type 'help' + Enter\r\n");
+}
+
 static void shell_output_fn(const char* str, lwshell_t* lwobj)
 {
     (void) lwobj;
@@ -76,8 +81,6 @@ UINT debug_shell_init(VOID* memory_ptr)
     {
         return TX_NOT_AVAILABLE;
     }
-
-    debug_shell_print("\r\n[shell] ready. Type 'help' + Enter\r\n");
 
     status = tx_thread_create(&shell_thread, "shell", shell_thread_entry, 0U, shell_thread_stack, sizeof(shell_thread_stack), SHELL_THREAD_PRIORITY, SHELL_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
     return status;

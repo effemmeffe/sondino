@@ -27,6 +27,7 @@
 UINT debug_log_init(VOID* memory_ptr);
 int debug_log_printf(const char* fmt, ...);
 int debug_log_vprintf(const char* fmt, va_list ap);
+void debug_log_flush(void);
 
 uint8_t debug_log_level_get_mask(void);
 void debug_log_level_set_mask(uint8_t mask);
@@ -70,6 +71,9 @@ static inline int debug_log_vprintf(const char* fmt, va_list ap)
     (void) fmt;
     (void) ap;
     return 0;
+}
+static inline void debug_log_flush(void)
+{
 }
 
 #define LOGI(fmt, ...) ((void) 0)

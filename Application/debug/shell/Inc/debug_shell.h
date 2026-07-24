@@ -7,6 +7,7 @@
 
 UINT debug_shell_init(VOID* memory_ptr);
 void debug_shell_print(const char* str);
+void debug_shell_print_ready(void);
 
 #else
 
@@ -19,6 +20,10 @@ static inline UINT debug_shell_init(VOID* memory_ptr)
 static inline void debug_shell_print(const char* str)
 {
     (void) str;
+}
+
+static inline void debug_shell_print_ready(void)
+{
 }
 
 #endif

@@ -167,9 +167,10 @@ static void dump_mcu_memory(void)
                 (unsigned long) heap_used,
                 (unsigned long) heap_free,
                 (unsigned long) heap_total);
+    // Linker absolute symbols: value is the symbol address, not *(addr).
     dump_printf("main stack reserve: %lu B below _estack=0x%08lX\r\n",
-                (unsigned long) _Min_Stack_Size,
-                (unsigned long) &_estack);
+                (unsigned long) (uintptr_t) &_Min_Stack_Size,
+                (unsigned long) (uintptr_t) &_estack);
 }
 
 static void dump_threads(void)

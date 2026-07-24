@@ -194,6 +194,27 @@ int debug_log_level_set_by_name(const char* name, int enable)
     return 0;
 }
 
+void debug_log_flush(void)
+{
+    ULONG enqueued = 1U;
+    UINT stable_empty = 0U;
+
+    while (stable_empty < 3U)
+    {
+        (void) tx_queue_info_get(&log_queue, TX_NULL, &enqueued, TX_NULL, TX_NULL, TX_NULL, TX_NULL);
+        if (enqueued == 0U)
+        {
+            stable_empty++;
+            (void) tx_thread_sleep(2U);
+        }
+        else
+        {
+            stable_empty = 0U;
+            (void) tx_thread_sleep(1U);
+        }
+    }
+}
+
 UINT debug_log_init(VOID* memory_ptr)
 {
     UINT status;
@@ -226,6 +247,10 @@ UINT debug_log_init(VOID* memory_ptr)
 {
     (void) memory_ptr;
     return TX_SUCCESS;
+}
+
+void debug_log_flush(void)
+{
 }
 
 #endif
