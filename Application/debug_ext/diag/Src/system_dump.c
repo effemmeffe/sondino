@@ -176,7 +176,9 @@ static void dump_mcu_memory(void)
 static void dump_threads(void)
 {
     TX_THREAD* thread_ptr;
+    TX_THREAD* start_ptr;
     ULONG remaining;
+    ULONG printed = 0U;
 
     dump_puts("--- threads ---\r\n");
     dump_printf("count: %lu\r\n", (unsigned long) _tx_thread_created_count);
@@ -189,6 +191,7 @@ static void dump_threads(void)
         return;
     }
 
+    start_ptr = thread_ptr;
     do
     {
         CHAR* name = NULL;
@@ -198,9 +201,18 @@ static void dump_threads(void)
         UINT preempt = 0U;
         ULONG time_slice = 0U;
         ULONG stack_used = 0U;
+        TX_THREAD* next_ptr = NULL;
         TX_THREAD* current = tx_thread_identify();
 
-        (void) tx_thread_info_get(thread_ptr, &name, &state, &run_count, &priority, &preempt, &time_slice, TX_NULL, TX_NULL);
+        if (thread_ptr->tx_thread_id != TX_THREAD_ID)
+        {
+            dump_printf("  (corrupt TCB @%p after %lu, stop)\r\n",
+                        (void*) thread_ptr,
+                        (unsigned long) printed);
+            break;
+        }
+
+        (void) tx_thread_info_get(thread_ptr, &name, &state, &run_count, &priority, &preempt, &time_slice, &next_ptr, TX_NULL);
         stack_used = thread_stack_used_bytes(thread_ptr);
 
         dump_printf("  %-12s state=%-11s prio=%u run=%lu stack %lu/%lu B (%lu%%)%s\r\n",
@@ -215,8 +227,22 @@ static void dump_threads(void)
                         : 0UL,
                     (thread_ptr == current) ? " *" : "");
 
-        thread_ptr = thread_ptr->tx_thread_created_next;
+        printed++;
         remaining--;
+        thread_ptr = next_ptr;
+        if ((thread_ptr == NULL) && (remaining != 0U))
+        {
+            dump_printf("  (created list broken after %lu, %lu missing)\r\n",
+                        (unsigned long) printed,
+                        (unsigned long) remaining);
+            break;
+        }
+        if ((thread_ptr == start_ptr) && (remaining != 0U))
+        {
+            dump_printf("  (created list wrapped early after %lu)\r\n",
+                        (unsigned long) printed);
+            break;
+        }
     } while ((remaining != 0U) && (thread_ptr != NULL));
 }
 
