@@ -41,4 +41,4 @@ Edit `version.toml`, run `python scripts/gen_firmware_version.py`, rebuild.
 
 ## License
 
-Application code: project license. ThirdParty: see `ThirdParty/*/LICENSE` or upstream repos.
+Application code: MIT, see [`LICENSE`](LICENSE). ThirdParty: see `ThirdParty/*/LICENSE`.
