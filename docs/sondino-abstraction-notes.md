@@ -1,10 +1,10 @@
 # Astrazione di sondino (multi-RTOS e multi-MCU): note di ripartenza
 
-Data: 12/10/2026. Stato del progetto di evoluzione di sondino, su branch dedicato (`feat/port-abstraction`), separato dal progetto `servo-shell` su ESP32-C6.
+Data: 12/10/2026. Riassunto per riprendere il lavoro in un'altra chat. Il documento completo e' `sondino-astrazione.md`.
 
 ## Base e idea
 
-Base: questo repo, pacchetto debug con log, UART e shell (lwshell e lwprintf) per STM32L4 + ThreadX.
+Base: `effemmeffe/sondino`, pacchetto debug con log, UART e shell (lwshell e lwprintf) per STM32L4 + ThreadX.
 
 Sondino diventa un modulo da importare e configurare una sola volta per RTOS e micro. Nel resto del codice si usano sempre `LOGI/LOGW/LOGE` e la shell. Il modulo gestisce da solo la seriale dedicata.
 
@@ -36,7 +36,7 @@ Primitive che il core usa, da implementare per ogni coppia RTOS + MCU:
 
 Le librerie lw fanno parsing e formattazione; il port sposta solo i byte sulla seriale. Le lw sono C portabile, non legate a STM32.
 
-## Struttura del repo (target)
+## Struttura del repo
 
 `core/`, `ext/`, `ports/` (per esempio `threadx_stm32l4/`, `freertos_esp32c6/`), `ThirdParty/`, `docs/`.
 
@@ -63,14 +63,14 @@ Scelta del port con CMake o Kconfig su ESP-IDF, oppure con un header `debug_port
 ## Roadmap
 
 1. Ora: `servo-shell` su ESP32-C6 (FreeRTOS, USB nativa), port scritto nella forma di `debug_port.h`. STM32 non toccato.
-2. Poi: migrazione dell'STM32 sul port ThreadX, con comportamento identico verificato.
+2. Poi: repo separato (sondino v2 con `ports/`) e migrazione dell'STM32 sul port ThreadX, con comportamento identico verificato.
 3. Infine: nuovi port secondo necessita'.
 
 ## Decisioni prese
 
 - La shell sta sulla USB nativa.
 - `servo-shell` usa `snprintf` della libc come scorciatoia temporanea; nel modulo finale la formattazione e' del core.
-- L'astrazione si sviluppa su un branch separato, validata prima dal progetto servo.
+- L'astrazione si sviluppa come evoluzione separata di sondino, validata prima dal progetto servo.
 
 ## Questioni aperte
 
@@ -78,3 +78,7 @@ Scelta del port con CMake o Kconfig su ESP-IDF, oppure con un header `debug_port
 - Forma definitiva della coda (dimensione messaggio e profondita' configurabili)
 - Come gestire `sys` sui port senza un equivalente di `system_dump`
 - Rendere lwprintf opzionale (acceso di default, spegnibile per usare la libc)
+
+## Mail
+
+Una mail e' gia' partita con la vecchia formulazione imprecisa su snprintf/lwprintf. Nuove mail solo su richiesta, una sola alla fine, con il testo corretto.
