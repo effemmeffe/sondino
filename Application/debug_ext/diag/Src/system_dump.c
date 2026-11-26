@@ -151,8 +151,9 @@ static void dump_mcu_memory(void)
     uintptr_t heap_used = 0U;
     uintptr_t heap_free = 0U;
     uintptr_t heap_total = 0U;
-    const uint32_t ram_size = 96U * 1024U;
-    const uint32_t static_used = (uint32_t) &_end - 0x20000000U;
+    // .data is the first output section in RAM: _sdata .. _estack is the region the linker script uses.
+    const uint32_t ram_size = (uint32_t) ((uintptr_t) &_estack - (uintptr_t) &_sdata);
+    const uint32_t static_used = (uint32_t) ((uintptr_t) &_end - (uintptr_t) &_sdata);
 
     sysmem_get_heap_stats(&heap_used, &heap_free, &heap_total);
 
